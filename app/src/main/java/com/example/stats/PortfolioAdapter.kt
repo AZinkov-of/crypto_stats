@@ -11,8 +11,8 @@ import com.example.stats.databinding.PortfolioItemBinding
 import java.text.DecimalFormat
 
 interface ActionListener {
-//    fun deleteAsset(asset: Asset) {
-//    }
+    fun changeAsset(asset: Asset) {
+    }
 }
 
 class PortfolioAdapter(private val actionListener: ActionListener) :
@@ -29,7 +29,8 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = PortfolioItemBinding.inflate(inflater, parent, false)
-//        binding.root.setOnClickListener(this)
+        binding.root.setOnClickListener(this)
+        binding.price.setOnClickListener(this)
 //        binding.cross.setOnClickListener(this)
         return MyViewHolder(binding)
     }
@@ -38,18 +39,21 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
         val binding: PortfolioItemBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
-//    override fun onClick(v: View) {
-////        val word: Word = v.tag as Word
-//        when (v.id) {
-////            R.id.cross -> {
-////                actionListener.deleteItem(word)
-////            }
-//
-//            else -> {
-////                actionListener.deleteItem(word)
+    override fun onClick(v: View) {
+        val ass = v.tag as Asset
+        when (v.id) {
+            R.id.price -> {
+                actionListener.changeAsset(ass)
+            }
+//            R.id. -> {
+//                actionListener.buy(ad)
 //            }
-//        }
-//    }
+            else -> {
+                actionListener.changeAsset(ass)
+            }
+        }
+    }
+
 
     override fun getItemCount(): Int {
         return potfolioList.size
@@ -80,11 +84,15 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
         percent.text = "${df.format(per)}%"
         profit.text = "$" + "${df.format(currentItem.price / (100 + per) * per * currentItem.volume)}"
         }
+
+        holder.binding.price.tag = currentItem
+        holder.binding.root.tag= currentItem
+
     }
 
-    override fun onClick(p0: View?) {
-        TODO("Not yet implemented")
-    }
+//    override fun onClick(p0: View?) {
+//        TODO("Not yet implemented")
+//    }
 
     fun setData(asset: List<Asset>) {
         potfolioList = asset
