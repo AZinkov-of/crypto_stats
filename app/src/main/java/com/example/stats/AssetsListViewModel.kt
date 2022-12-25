@@ -1,35 +1,36 @@
 package com.example.stats
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class AssetsListViewModel(private val assetService: AssetService) : ViewModel() {
-    private val _assets = MutableLiveData<List<Asset>>()
-    val assets: LiveData<List<Asset>> = _assets
+class AssetsListViewModel(application: Application)
+    : AndroidViewModel(application) {
+
+    val assets: LiveData<List<Asset>>
 
     init{
+        val userDao_ = ADatabase.getDatabase(application).userDao()
+        assets = userDao_.getAssets()
         loadAssets()
     }
 
     override fun onCleared() {
         super.onCleared()
-        assetService.removeListener(listener)
+//        assetService.removeListener(listener)
     }
 
     private fun loadAssets() {
-        assetService.addListener(listener)
+//        assetService.addListener(listener)
     }
 
     fun deleteAssets(asset: Asset) {
 //        assetService.deleteAsset(asset)
     }
 
-    fun addTransactions() {
-
-    }
-
-    private val listener:AssetListener = {
-//        _assets.value = it
-    }
+//    private val listener:AssetListener = {
+////        _assets.value = it
+//    }
 }

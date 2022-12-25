@@ -1,18 +1,19 @@
 package com.example.stats
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stats.databinding.FragmentPortfolioBinding
 
 class PortfolioFragment : Fragment() {
     private lateinit var binding: FragmentPortfolioBinding
     private lateinit var adapter: PortfolioAdapter
-    private val viewModel: AssetsListViewModel by viewModels { factory() }
+
+    lateinit var viewModel: AssetsListViewModel
 
     private val assetService = AssetService()
 
@@ -26,7 +27,15 @@ class PortfolioFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = PortfolioAdapter(object : ActionListener {
+            @SuppressLint("SuspiciousIndentation")
             override fun changeAsset(asset: Asset) {
+                
+//                viewModel = ViewModelProvider(
+//                    this,
+//                    ViewModelProvider.AndroidViewModelFactory.getInstance()
+//                ).get(AssetsListViewModel::class.java)
+
+
 //                binding.textView3.text = "sdsdfsdf" + (0..100).random().toString()
 //                viewModel.deleteAssets(asset)
                 val assfragm = AssetFragment.newInstance()
