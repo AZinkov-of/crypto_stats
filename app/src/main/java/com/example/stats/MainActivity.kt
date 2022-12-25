@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.example.stats.databinding.ActivityMainBinding
-import com.example.stats.fragment.PortfolioFragment
-import com.example.stats.fragment.WatchlistFragment
+import com.example.stats.fragments.PortfolioFragment
+import com.example.stats.fragments.WatchlistFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

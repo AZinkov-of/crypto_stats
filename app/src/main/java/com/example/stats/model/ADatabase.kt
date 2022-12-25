@@ -1,9 +1,11 @@
-package com.example.stats
+package com.example.stats.model
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.stats.Asset
+import com.example.stats.model.dao.AssetDao
 
 @Database(
     version = 1,
@@ -12,6 +14,7 @@ import androidx.room.RoomDatabase
 
 abstract class ADatabase : RoomDatabase() {
     abstract fun assetDao(): AssetDao
+
     companion object {
         @Volatile
         private var INSTANCE: ADatabase? = null

@@ -17,21 +17,17 @@ interface ActionListener {
 
 class PortfolioAdapter(private val actionListener: ActionListener) :
     RecyclerView.Adapter<PortfolioAdapter.MyViewHolder>(), View.OnClickListener {
-    //    private var potfolioList = emptyList<Int>()
-    var potfolioList:List<Asset> = emptyList()
+    var potfolioList: List<Asset> = emptyList()
         set(newValue) {
             field = newValue
             notifyDataSetChanged()
         }
-
-//    private var wordList = emptyList<Word>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = PortfolioItemBinding.inflate(inflater, parent, false)
         binding.root.setOnClickListener(this)
         binding.price.setOnClickListener(this)
-//        binding.cross.setOnClickListener(this)
         return MyViewHolder(binding)
     }
 
@@ -45,15 +41,11 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
             R.id.price -> {
                 actionListener.viewAsset(ass)
             }
-//            R.id. -> {
-//                actionListener.buy(ad)
-//            }
             else -> {
                 actionListener.viewAsset(ass)
             }
         }
     }
-
 
     override fun getItemCount(): Int {
         return potfolioList.size
@@ -70,35 +62,26 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
             price.text = "$" + df.format(currentItem.price).toString()
             cost.text = "$" + df.format(currentItem.volume * currentItem.price).toString()
 
-        when {
-            per > 0 -> {
-                percent.setTextColor(Color.parseColor("#00E503"))
-                profit.setTextColor(Color.parseColor("#00E503"))
+            when {
+                per > 0 -> {
+                    percent.setTextColor(Color.parseColor("#00E503"))
+                    profit.setTextColor(Color.parseColor("#00E503"))
+                }
+                per < 0 -> {
+                    percent.setTextColor(Color.parseColor("#FB0000"))
+                    profit.setTextColor(Color.parseColor("#FB0000"))
+                }
             }
-            per < 0 -> {
-                percent.setTextColor(Color.parseColor("#FB0000"))
-                profit.setTextColor(Color.parseColor("#FB0000"))
-            }
-        }
 
-        percent.text = "${df.format(per)}%"
-        profit.text = "$" + "${df.format(currentItem.price / (100 + per) * per * currentItem.volume)}"
+            percent.text = "${df.format(per)}%"
+            profit.text =
+                "$" + "${df.format(currentItem.price / (100 + per) * per * currentItem.volume)}"
         }
 
         holder.binding.price.tag = currentItem
-        holder.binding.root.tag= currentItem
+        holder.binding.root.tag = currentItem
 
     }
-
-//    override fun onClick(p0: View?) {
-//        TODO("Not yet implemented")
-//    }
-
-    fun setData(asset: List<Asset>) {
-        potfolioList = asset
-        notifyDataSetChanged()
-    }
-
 
 //    fun setData(words: List<Word>) {
 //        val difUpdate = DiffUtil.calculateDiff(WordDiffCallback(wordList, words))

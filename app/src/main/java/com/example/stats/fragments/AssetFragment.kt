@@ -1,4 +1,4 @@
-package com.example.stats.fragment
+package com.example.stats.fragments
 
 import android.app.Application
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.stats.AssetsListViewModel
+import com.example.stats.viewmodel.AssetsListViewModel
 import com.example.stats.databinding.FragmentAssetBinding
 
 class AssetFragment : Fragment() {
@@ -15,8 +15,7 @@ class AssetFragment : Fragment() {
     lateinit var viewModel: AssetsListViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAssetBinding.inflate(inflater)
         return binding.root

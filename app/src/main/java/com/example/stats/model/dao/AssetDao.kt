@@ -1,7 +1,8 @@
-package com.example.stats
+package com.example.stats.model.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.stats.Asset
 
 @Dao
 interface AssetDao {

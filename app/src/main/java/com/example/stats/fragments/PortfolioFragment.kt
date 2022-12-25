@@ -1,4 +1,4 @@
-package com.example.stats.fragment
+package com.example.stats.fragments
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stats.*
 import com.example.stats.databinding.FragmentPortfolioBinding
+import com.example.stats.viewmodel.AssetsListViewModel
 
 class PortfolioFragment : Fragment() {
     private lateinit var binding: FragmentPortfolioBinding
@@ -20,8 +21,7 @@ class PortfolioFragment : Fragment() {
     lateinit var viewModel: AssetsListViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPortfolioBinding.inflate(inflater)
         return binding.root
@@ -41,13 +41,8 @@ class PortfolioFragment : Fragment() {
                 bundle.putString("ticker", asset.ticker)
 
                 assfragm.arguments = bundle
-                    parentFragmentManager.beginTransaction().addToBackStack(null)
-                        .replace(R.id.fragment,assfragm ).commit()
-//                val par = parentFragmentManager.getFragment()
-//                if (par != null) {
-//                    parentFragmentManager.beginTransaction().addToBackStack(null)
-//                        .replace(par, AssetFragment.newInstance()).commit()
-//                }
+                parentFragmentManager.beginTransaction().addToBackStack(null)
+                    .replace(R.id.fragment, assfragm).commit()
             }
         })
 
@@ -57,8 +52,6 @@ class PortfolioFragment : Fragment() {
 
         binding.portfolioRecivlerView.adapter = adapter
         binding.portfolioRecivlerView.layoutManager = LinearLayoutManager(binding.root.context)
-
-
 
         val tickers = mutableListOf<String>(
             "ETH",
@@ -82,7 +75,8 @@ class PortfolioFragment : Fragment() {
             "XMR",
             "FLOW"
         )
-         var assets = mutableListOf<Asset>()
+
+        var assets = mutableListOf<Asset>()
         tickers.shuffle()
         assets = (0..19).map {
             Asset(
