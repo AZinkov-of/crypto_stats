@@ -1,4 +1,4 @@
-package com.example.stats
+package com.example.stats.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

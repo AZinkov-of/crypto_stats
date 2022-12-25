@@ -1,12 +1,16 @@
-package com.example.stats
+package com.example.stats.fragment
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.stats.*
 import com.example.stats.databinding.FragmentPortfolioBinding
 
 class PortfolioFragment : Fragment() {
@@ -14,8 +18,6 @@ class PortfolioFragment : Fragment() {
     private lateinit var adapter: PortfolioAdapter
 
     lateinit var viewModel: AssetsListViewModel
-
-    private val assetService = AssetService()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,23 +28,18 @@ class PortfolioFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireContext().applicationContext as Application)
+        ).get(AssetsListViewModel::class.java)
+
         adapter = PortfolioAdapter(object : ActionListener {
             @SuppressLint("SuspiciousIndentation")
-            override fun changeAsset(asset: Asset) {
-                
-//                viewModel = ViewModelProvider(
-//                    this,
-//                    ViewModelProvider.AndroidViewModelFactory.getInstance()
-//                ).get(AssetsListViewModel::class.java)
-
-
-//                binding.textView3.text = "sdsdfsdf" + (0..100).random().toString()
-//                viewModel.deleteAssets(asset)
+            override fun viewAsset(asset: Asset) {
                 val assfragm = AssetFragment.newInstance()
                 val bundle = Bundle()
                 bundle.putString("ticker", asset.ticker)
-                bundle.putDouble("price", asset.price)
-                // TODO: переписать по человечески 
+
                 assfragm.arguments = bundle
                     parentFragmentManager.beginTransaction().addToBackStack(null)
                         .replace(R.id.fragment,assfragm ).commit()
@@ -54,15 +51,52 @@ class PortfolioFragment : Fragment() {
             }
         })
 
-//        viewModel.assets.observe(viewLifecycleOwner, Observer {
-//            adapter.potfolioList = it
-//        })
+        viewModel.assets.observe(viewLifecycleOwner, Observer {
+            adapter.potfolioList = it
+        })
 
         binding.portfolioRecivlerView.adapter = adapter
         binding.portfolioRecivlerView.layoutManager = LinearLayoutManager(binding.root.context)
 
-        var ass = AssetService()
-        adapter.setData(ass.getAssets())
+
+
+        val tickers = mutableListOf<String>(
+            "ETH",
+            "BTC",
+            "USDT",
+            "BNB",
+            "ADA",
+            "SOL",
+            "DOGE",
+            "DOT",
+            "MATIC",
+            "TRX",
+            "AVAX",
+            "ATOM",
+            "UNI",
+            "ETC",
+            "LTC",
+            "FTT",
+            "NEAR",
+            "XLM",
+            "XMR",
+            "FLOW"
+        )
+         var assets = mutableListOf<Asset>()
+        tickers.shuffle()
+        assets = (0..19).map {
+            Asset(
+                tickers[it],
+                (0..10000).random().toDouble() / 1000,
+                (0..10000000).random().toDouble() / 10000
+            )
+        }.toMutableList()
+
+        assets.forEach {
+            viewModel.addAsset(it)
+        }
+
+//        viewModel.addAsset(Asset("sdf",12.2,23.1))
     }
 
     companion object {

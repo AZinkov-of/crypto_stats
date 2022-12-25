@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.example.stats.databinding.ActivityMainBinding
+import com.example.stats.fragment.PortfolioFragment
+import com.example.stats.fragment.WatchlistFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -38,6 +41,8 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+//        val assetDao_ = ADatabase.getDatabase(application).assetDao()
 
         binding.bottomNavigationView.setOnNavigationItemReselectedListener { item ->
             when (item.itemId) {

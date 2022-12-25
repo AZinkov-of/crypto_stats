@@ -1,36 +1,43 @@
 package com.example.stats
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AssetsListViewModel(application: Application)
     : AndroidViewModel(application) {
 
     val assets: LiveData<List<Asset>>
+    val assetDao_ = ADatabase.getDatabase(application).assetDao()
 
     init{
-        val userDao_ = ADatabase.getDatabase(application).userDao()
-        assets = userDao_.getAssets()
-        loadAssets()
+        val assetDao_ = ADatabase.getDatabase(application).assetDao()
+        assets = assetDao_.getAssets()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-//        assetService.removeListener(listener)
+    fun addAsset(asset: Asset) {
+        viewModelScope.launch(Dispatchers.IO) {
+            assetDao_.addUser(asset)
+        }
     }
+    
 
-    private fun loadAssets() {
-//        assetService.addListener(listener)
-    }
-
-    fun deleteAssets(asset: Asset) {
-//        assetService.deleteAsset(asset)
-    }
-
-//    private val listener:AssetListener = {
-////        _assets.value = it
+//
+//    override fun onCleared() {
+//        super.onCleared()
+////        assetService.removeListener(listener)
 //    }
+//
+//    private fun loadAssets() {
+////        assetService.addListener(listener)
+//    }
+//
+//    fun deleteAssets(asset: Asset) {
+////        assetService.deleteAsset(asset)
+//    }
+//
+////    private val listener:AssetListener = {
+//////        _assets.value = it
+////    }
 }

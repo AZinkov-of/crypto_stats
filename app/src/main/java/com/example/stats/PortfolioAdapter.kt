@@ -11,7 +11,7 @@ import com.example.stats.databinding.PortfolioItemBinding
 import java.text.DecimalFormat
 
 interface ActionListener {
-    fun changeAsset(asset: Asset) {
+    fun viewAsset(asset: Asset) {
     }
 }
 
@@ -43,13 +43,13 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
         val ass = v.tag as Asset
         when (v.id) {
             R.id.price -> {
-                actionListener.changeAsset(ass)
+                actionListener.viewAsset(ass)
             }
 //            R.id. -> {
 //                actionListener.buy(ad)
 //            }
             else -> {
-                actionListener.changeAsset(ass)
+                actionListener.viewAsset(ass)
             }
         }
     }

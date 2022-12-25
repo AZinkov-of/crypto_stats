@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
 )
 
 abstract class ADatabase : RoomDatabase() {
-    abstract fun userDao(): AssetDao
+    abstract fun assetDao(): AssetDao
     companion object {
         @Volatile
         private var INSTANCE: ADatabase? = null
