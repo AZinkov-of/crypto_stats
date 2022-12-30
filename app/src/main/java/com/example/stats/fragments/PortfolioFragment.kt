@@ -9,14 +9,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myenglishapp.SwipeToDelete
 import com.example.stats.*
 import com.example.stats.databinding.FragmentPortfolioBinding
 import com.example.stats.viewmodel.AssetsListViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class PortfolioFragment : Fragment() {
     private lateinit var binding: FragmentPortfolioBinding
     private lateinit var adapter: PortfolioAdapter
+    private var sum = 0.0
 
     lateinit var viewModel: AssetsListViewModel
 
@@ -53,6 +59,53 @@ class PortfolioFragment : Fragment() {
         binding.portfolioRecivlerView.adapter = adapter
         binding.portfolioRecivlerView.layoutManager = LinearLayoutManager(binding.root.context)
 
+        binding.addTransaction.setOnClickListener {
+            parentFragmentManager.beginTransaction().addToBackStack(null)
+                .replace(R.id.fragment, NewTransactionFragment.newInstance()).commit()
+        }
+
+//        binding.deleteItem.setOnClickListener {
+//            GlobalScope.launch {
+//                val ass = viewModel.getFullCost()
+//                if (ass.isEmpty()) {
+//                    addAsset()
+//                } else {
+//                    val i = (ass.indices).random()
+//                    viewModel.deleteAsset(ass[i])
+//                }
+//            }
+//
+//            val job: Job = GlobalScope.launch {
+//                val ass1 = viewModel.getFullCost()
+//                sum = ass1.sumOf { it.price * it.volume }
+//            }
+////            job.invokeOnCompletion {
+////                binding.fullCost.text = "$"+sum.toString()
+////            }
+//        }
+        addAsset()
+        initSwipeToDelete()
+    }
+
+    private fun initSwipeToDelete() {
+        val onItemSwipedToDelete = { positionForRemove: Int ->
+            Thread(Runnable {
+                val assets= viewModel.getAssets()
+                viewModel.deleteAsset(assets[positionForRemove])
+            }).start()
+        }
+
+        val swipeToDeleteCallback = SwipeToDelete(onItemSwipedToDelete)
+        ItemTouchHelper(swipeToDeleteCallback).attachToRecyclerView(binding.portfolioRecivlerView)
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = PortfolioFragment()
+    }
+
+
+    fun addAsset() {
         val tickers = mutableListOf<String>(
             "ETH",
             "BTC",
@@ -89,12 +142,5 @@ class PortfolioFragment : Fragment() {
         assets.forEach {
             viewModel.addAsset(it)
         }
-
-//        viewModel.addAsset(Asset("sdf",12.2,23.1))
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = PortfolioFragment()
     }
 }

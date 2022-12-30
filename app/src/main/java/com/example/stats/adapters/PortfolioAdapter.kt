@@ -11,7 +11,21 @@ import com.example.stats.databinding.PortfolioItemBinding
 import java.text.DecimalFormat
 
 interface ActionListener {
-    fun viewAsset(asset: Asset) {
+    fun viewAsset(asset: Asset)
+}
+
+class PortfolioDiffCallback(private val oldList: List<Asset>, private val  newList: List<Asset>) :
+    DiffUtil.Callback() {
+    override fun getOldListSize(): Int = oldList.size
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].ticker == newList[newItemPosition].ticker
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+
+        return oldList[oldItemPosition]==newList[newItemPosition]
     }
 }
 
@@ -19,8 +33,9 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
     RecyclerView.Adapter<PortfolioAdapter.MyViewHolder>(), View.OnClickListener {
     var potfolioList: List<Asset> = emptyList()
         set(newValue) {
+            val difUpdate =  DiffUtil.calculateDiff(PortfolioDiffCallback(field,newValue))
             field = newValue
-            notifyDataSetChanged()
+            difUpdate.dispatchUpdatesTo(this)
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -82,10 +97,4 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
         holder.binding.root.tag = currentItem
 
     }
-
-//    fun setData(words: List<Word>) {
-//        val difUpdate = DiffUtil.calculateDiff(WordDiffCallback(wordList, words))
-//        wordList = words
-//        difUpdate.dispatchUpdatesTo(this)
-//    }
 }

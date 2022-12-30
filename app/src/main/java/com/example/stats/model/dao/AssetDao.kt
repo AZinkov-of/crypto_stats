@@ -7,14 +7,17 @@ import com.example.stats.Asset
 @Dao
 interface AssetDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addUser(asset: Asset)
+    suspend fun addAsset(asset: Asset)
 
     @Delete
-    suspend fun deleteUser(asset: Asset)
+    suspend fun deleteAsset(asset: Asset)
 
     @Update
-    suspend fun updateUser(asset: Asset)
+    suspend fun updateAsset(asset: Asset)
 
     @Query("SELECT * FROM asset_table")
     fun getAssets(): LiveData<List<Asset>>
+
+    @Query("SELECT * FROM asset_table")
+    fun getAssetsN(): List<Asset>
 }
