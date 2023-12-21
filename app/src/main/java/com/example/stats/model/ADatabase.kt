@@ -8,7 +8,7 @@ import com.example.stats.Asset
 import com.example.stats.model.dao.AssetDao
 
 @Database(
-    version = 1,
+    version = 2,
     entities = [Asset::class]
 )
 

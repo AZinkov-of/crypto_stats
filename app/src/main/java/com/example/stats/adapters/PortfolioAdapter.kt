@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.stats.databinding.PortfolioItemBinding
+import com.example.stats.model.crypto_cost
 import java.text.DecimalFormat
 
 interface ActionListener {
@@ -68,14 +69,17 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val df = DecimalFormat("#.##")
-        val per = ((0..2000).random().toDouble() / 100) - 10
+
         val currentItem = potfolioList[position]
+        val price_:Double = crypto_cost.getOrDefault(currentItem.ticker,0.0)
+
+        val per = ((price_ * currentItem.quantity - currentItem.total_invested)/currentItem.total_invested)*100
 
         with(holder.binding) {
             Ticker.text = currentItem.ticker
-            volume.text = df.format(currentItem.volume).toString()
-            price.text = "$" + df.format(currentItem.price).toString()
-            cost.text = "$" + df.format(currentItem.volume * currentItem.price).toString()
+            volume.text = df.format(currentItem.quantity).toString() + " " + currentItem.ticker
+            price.text = "$" + df.format(crypto_cost.getOrDefault(currentItem.ticker,0)).toString()
+            cost.text = "$" + df.format(currentItem.quantity *  price_).toString()
 
             when {
                 per > 0 -> {
@@ -90,7 +94,7 @@ class PortfolioAdapter(private val actionListener: ActionListener) :
 
             percent.text = "${df.format(per)}%"
             profit.text =
-                "$" + "${df.format(currentItem.price / (100 + per) * per * currentItem.volume)}"
+                "$" + "${df.format(price_ / (100 + per) * per * currentItem.quantity)}"
         }
 
         holder.binding.price.tag = currentItem

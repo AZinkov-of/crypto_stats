@@ -2,6 +2,7 @@ package com.example.stats.fragments
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myenglishapp.SwipeToDelete
 import com.example.stats.*
 import com.example.stats.databinding.FragmentPortfolioBinding
+import com.example.stats.model.crypto_cost
 import com.example.stats.viewmodel.AssetsListViewModel
+
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 class PortfolioFragment : Fragment() {
     private lateinit var binding: FragmentPortfolioBinding
@@ -83,8 +87,13 @@ class PortfolioFragment : Fragment() {
 ////                binding.fullCost.text = "$"+sum.toString()
 ////            }
 //        }
+<<<<<<< HEAD
 //        addAsset()
         binding.fullCost.text = "$"+sum.toString()
+=======
+        totalCost()
+//        addAsset()
+>>>>>>> a7a3c00efbcb50e36d1fbac76780c45d7c5951a7
         initSwipeToDelete()
     }
 
@@ -94,6 +103,7 @@ class PortfolioFragment : Fragment() {
                 val assets= viewModel.getAssets()
                 viewModel.deleteAsset(assets[positionForRemove])
             }).start()
+//            totalCost()
         }
 
         val swipeToDeleteCallback = SwipeToDelete(onItemSwipedToDelete)
@@ -104,6 +114,33 @@ class PortfolioFragment : Fragment() {
         @JvmStatic
         fun newInstance() = PortfolioFragment()
     }
+
+    fun totalCost() {
+        GlobalScope.launch {
+            val assets = viewModel.getAssets()
+            var total = 0.0
+            var total_investing = 0.0
+            for (i in assets) {
+                total += crypto_cost.getOrDefault(i.ticker,0.0) * i.quantity
+                total_investing += i.total_invested
+            }
+            val df = DecimalFormat("#.##")
+
+            binding.fullCost.text = "$ "+ df.format(total).toString()
+            binding.percentChange.text = df.format((total-total_investing)/
+                    total_investing*100).toString() + " %"
+            binding.costChange.text = "$ " + df.format(total-total_investing).toString()
+
+            if (total-total_investing> 0) {
+                binding.percentChange.setTextColor(Color.parseColor("#00E503"))
+                binding.costChange.setTextColor(Color.parseColor("#00E503"))
+            } else {
+                binding.percentChange.setTextColor(Color.parseColor("#FB0000"))
+                binding.costChange.setTextColor(Color.parseColor("#FB0000"))
+            }
+        }
+    }
+
 
 
     fun addAsset() {

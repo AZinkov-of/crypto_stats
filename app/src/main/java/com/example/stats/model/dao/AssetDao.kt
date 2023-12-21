@@ -20,4 +20,7 @@ interface AssetDao {
 
     @Query("SELECT * FROM asset_table")
     fun getAssetsN(): List<Asset>
+
+    @Query("SELECT * FROM asset_table WHERE ticker=(:tic)")
+    fun getAssetToTiker(tic: String): List<Asset>
 }

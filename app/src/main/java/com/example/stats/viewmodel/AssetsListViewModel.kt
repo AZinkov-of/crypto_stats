@@ -23,6 +23,12 @@ class AssetsListViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
+    fun updateAsset(asset: Asset) {
+        viewModelScope.launch(Dispatchers.IO) {
+            assetDao_.updateAsset(asset)
+        }
+    }
+
     fun deleteAsset(asset: Asset) {
         viewModelScope.launch(Dispatchers.IO) {
             assetDao_.deleteAsset(asset)
@@ -32,4 +38,10 @@ class AssetsListViewModel(application: Application) : AndroidViewModel(applicati
     fun getAssets ():List<Asset> {
         return  assetDao_.getAssetsN()
     }
+
+
+    fun getAssetToTicker (tic: String):List<Asset> {
+        return  assetDao_.getAssetToTiker(tic)
+    }
+
 }
