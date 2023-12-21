@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class PortfolioFragment : Fragment() {
     private lateinit var binding: FragmentPortfolioBinding
     private lateinit var adapter: PortfolioAdapter
-    private var sum = 0.0
+    private var sum = 395.13
 
     lateinit var viewModel: AssetsListViewModel
 
@@ -83,7 +83,8 @@ class PortfolioFragment : Fragment() {
 ////                binding.fullCost.text = "$"+sum.toString()
 ////            }
 //        }
-        addAsset()
+//        addAsset()
+        binding.fullCost.text = "$"+sum.toString()
         initSwipeToDelete()
     }
 
@@ -106,36 +107,71 @@ class PortfolioFragment : Fragment() {
 
 
     fun addAsset() {
-        val tickers = mutableListOf<String>(
-            "ETH",
-            "BTC",
-            "USDT",
-            "BNB",
-            "ADA",
-            "SOL",
-            "DOGE",
-            "DOT",
-            "MATIC",
-            "TRX",
-            "AVAX",
-            "ATOM",
-            "UNI",
-            "ETC",
-            "LTC",
-            "FTT",
-            "NEAR",
-            "XLM",
-            "XMR",
-            "FLOW"
-        )
+            val tickers = mutableListOf<String>(
+                "ETH",
+                "BTC",
+                "USDT",
+                "BNB",
+                "ADA",
+                "SOL",
+                "DOGE",
+                "DOT",
+                "MATIC",
+                "TRX",
+                "AVAX",
+                "ATOM",
+                "UNI",
+                "ETC",
+                "MNT",
+                "FTT",
+                "NEAR",
+                "XLM",
+                "XMR",
+                "FLOW"
+            )
+
+            val prices = mutableListOf<Double>(
+                2177.98,
+                42331.05,
+                0.998,
+                252.41,
+                0.5763,
+                72.72,
+                0.09028,
+                6.72,
+                0.7658,
+                0.1005,
+                39.8,
+                10.39,
+                5.84,
+                19.65,
+                0.5619,
+                3.79,
+                2.47,
+                0.1195,
+                170.63,
+                0.7735
+            )
 
         var assets = mutableListOf<Asset>()
-        tickers.shuffle()
+//        tickers.shuffle()
         assets = (0..19).map {
+
+            var k = 1
+            if (prices[it]>10)
+                k = 10
+            if (prices[it]>100)
+                k = 100
+            if (prices[it]>1000)
+                k = 1000
+            if (prices[it]>10000)
+                k = 10000
+
+
             Asset(
                 tickers[it],
-                (0..10000).random().toDouble() / 1000,
-                (0..10000000).random().toDouble() / 10000
+                (0..10000).random().toDouble() / 10/k,
+                prices[it]
             )
         }.toMutableList()
 
