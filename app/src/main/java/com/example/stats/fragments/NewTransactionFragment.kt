@@ -16,6 +16,8 @@ import com.example.stats.R
 import com.example.stats.databinding.FragmentNewTransactionBinding
 import com.example.stats.databinding.FragmentPortfolioBinding
 import com.example.stats.viewmodel.AssetsListViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class NewTransactionFragment : Fragment() {
@@ -71,19 +73,36 @@ class NewTransactionFragment : Fragment() {
         binding.addTransaction.setOnClickListener {
             val price = binding.price.text
             val ticker = binding.ticker.text
-            val amount = binding.amount.text
+            var amount = binding.amount.text
             val all = binding.all.text
 
             if (price.isNotEmpty() and all.isNotEmpty() and
                 ticker.isNotEmpty() and amount.isNotEmpty()
             ) {
-                viewModel.addAsset(
-                    Asset(
-                        ticker.toString(),
-                        amount.toString().toDouble(),
-                        price.toString().toDouble()
-                    )
+                var vol = amount.toString().toDouble()
+                if (binding.toggleButtonBuy.isChecked) {
+                    vol*=-1
+                }
+
+                var ass = Asset(
+                    ticker.toString().toUpperCase(),
+                    vol,
+                    price.toString().toDouble()
                 )
+
+                GlobalScope.launch {
+                    val ass1 = viewModel.getAssetToTicker(ticker.toString().toUpperCase())
+                    if (ass1.isEmpty()) {
+                        viewModel.addAsset(ass)
+                    } else {
+                      viewModel.updateAsset(Asset(
+                          ass.ticker,
+                          ass.quantity+ass1[0].quantity,
+                          33.1
+//                          ass.price
+                      ))
+                    }
+                }
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment, PortfolioFragment.newInstance()).commit()
 

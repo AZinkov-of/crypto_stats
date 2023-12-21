@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 data class Asset(
     @PrimaryKey()
     val ticker: String,
-    val volume: Double,
-    val price: Double
+    val quantity: Double,
+    val total_invested: Double
 )
